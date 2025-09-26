@@ -32,11 +32,16 @@ def test_cart_flow():
     added_item = add_response.get_json()
     assert added_item["quantity"] == 2
 
+    second_add = client.post("/cart", json={"product_id": 1, "quantity": 3})
+    assert second_add.status_code == 201
+    assert second_add.get_json()["quantity"] == 5
+
     cart_response = client.get("/cart")
     assert cart_response.status_code == 200
     cart_data = cart_response.get_json()
     assert cart_data["items"]
     assert cart_data["subtotal"] > 0
+    assert cart_data["items"][0]["quantity"] == 5
 
     clear_response = client.delete("/cart")
     assert clear_response.status_code == 200

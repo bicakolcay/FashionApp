@@ -25,7 +25,7 @@ FashionApp basit bir Flask tabanlı REST API'sidir. Küçük bir moda kataloğun
 - `GET /health` – Servisin çalışır durumda olduğunu doğrulayan basit bir sağlık kontrolü.
 - `GET /products` – Tüm ürün kataloğunu döndürür.
 - `GET /products/<id>` – Tekil ürünü döndürür, bulunamazsa 404 döner.
-- `POST /cart` – `product_id` ve opsiyonel `quantity` alanlarını içeren JSON gövdesiyle ürünü sepete ekler.
+- `POST /cart` – `product_id` ve opsiyonel `quantity` alanlarını içeren JSON gövdesiyle ürünü sepete ekler. Aynı ürün tekrar eklendiğinde miktarı artırılır.
 - `GET /cart` – Sepetteki mevcut öğeleri ve ara toplamı listeler.
 - `DELETE /cart` – Sepeti temizler.
 

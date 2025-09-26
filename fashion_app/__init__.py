@@ -2,12 +2,13 @@ from __future__ import annotations
 
 from flask import Flask, jsonify, request
 
+from .cart import Cart
 from .data import PRODUCTS, find_product
 
 
 def create_app() -> Flask:
     app = Flask(__name__)
-    cart: list[dict] = []
+    cart = Cart()
 
     @app.get("/health")
     def health() -> tuple[dict, int]:
@@ -40,20 +41,19 @@ def create_app() -> Flask:
             return {"error": "Product not found"}, 404
 
         # Copy relevant fields so the in-memory cart is decoupled from catalog
-        cart_item = {
-            "product_id": product["id"],
-            "name": product["name"],
-            "price": product["price"],
-            "quantity": quantity,
-        }
-        cart.append(cart_item)
-        return jsonify(cart_item), 201
+        cart_item = cart.add(
+            product_id=product["id"],
+            name=product["name"],
+            price=float(product["price"]),
+            quantity=quantity,
+        )
+        return jsonify(cart_item.to_dict()), 201
 
     @app.get("/cart")
     def view_cart():
-        subtotal = sum(item["price"] * item["quantity"] for item in cart)
+        subtotal = cart.subtotal()
         return jsonify({
-            "items": cart,
+            "items": cart.serialize_items(),
             "subtotal": round(subtotal, 2),
         })
 
